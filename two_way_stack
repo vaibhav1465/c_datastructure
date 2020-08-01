@@ -1,0 +1,124 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+struct node
+{
+	int c;
+	int t1,t2;
+	int *p;
+};
+void view(struct node *a)
+{
+	int i;
+	if(a->t1==-1&&a->t2==a->c)
+	printf("empty");
+	else
+	{
+		for(i=0;i<=a->t1;i++)
+		printf("%d ",a->p[i]);
+		for(i=a->t2;i<a->c;i++)
+		printf("%d ",a->p[i]);
+	}
+	
+}
+void pop1(struct node *a)
+{
+	if(a->t1==-1)
+	printf("\nUnderflow");
+	else
+	{
+		a->t1-=1;
+	}
+}
+void pop2(struct node *a)
+{
+	if(a->t2==a->c)
+	printf("\nUnderflow");
+	else
+	{
+		a->t2+=1;
+	}
+}
+void push1(struct node *a,int d)
+{
+	if(a->t1+1==a->t2)
+	printf("\noverflow");
+	else
+	{
+		a->t1+=1;
+		a->p[a->t1]=d;
+	}
+}
+void push2(struct node *a,int d)
+{
+	if(a->t2-1==a->t1)
+	printf("\noverflow");
+	else
+	{
+		a->t2-=1;
+		a->p[a->t2]=d;
+	}
+}
+struct node* createtwowaystack(int c)
+{
+	struct node *a;
+	a=(struct node*)malloc(sizeof(struct node));
+	a->c=c;
+	a->t1=-1;
+	a->t2=c;
+	a->p=(int*)malloc(sizeof(int)*c);
+	return a;
+}
+int menu()
+{
+	int c;
+	printf("\n1. Push a Element");
+	printf("\n2. Pop a Element");
+printf("\n3. Exit");
+	printf("\n\n Choose ur option : ");
+	scanf("%d",&c);
+	return c;
+	
+}
+int main()
+{
+  struct node *a;int d,p;
+  a=createtwowaystack(10);
+  while(1)
+	{
+		system("cls");
+		view(a);
+		switch(menu())
+		{
+			case 1:
+				printf("\nEnter Element to Push");
+				scanf("%d",&d);
+				printf("\nIn which stack u wnt to push(1 or 2)");
+				scanf("%d",&p);
+				if(p==1)
+				push1(a,d);
+				else
+				push2(a,d);
+				break;
+			case 2:
+				printf("\nIn which stack u wnt to pop(1 or 2)");
+				scanf("%d",&p);
+				if(p==1)
+				pop1(a);
+				else
+				pop2(a);
+				break;
+			case 3:
+				printf("\nEnter any key to Exit");
+				getch();
+				exit(0);
+			default:
+				printf("\nInvalid choice");
+				
+		}
+		getch();
+	}
+	
+
+  
+}
