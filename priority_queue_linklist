@@ -1,0 +1,149 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+struct node
+{
+	int p;
+	int i;
+	struct node *n;
+};
+int menu()
+{
+	int c;
+	printf("\n1. Insert a Element");
+	printf("\n2. Delete a Element");
+	printf("\n3. Exit");
+	printf("\n\n Choose ur option : ");
+	scanf("%d",&c);
+	return c;
+	
+}
+void insert(struct node **q,int d,int p)
+{
+	struct node *t=*q,*r;
+	struct node *n;
+	n=(struct node*)malloc(sizeof(struct node));
+	n->i=d;
+	n->p=p;
+	if(*q==NULL)
+	{
+		*q=n;
+		(*q)->n=NULL;
+	}
+	else
+	{
+		if(t->p>p)
+		{
+			n->n=t;
+			*q=n;
+		}
+		else if(t->p<p)
+		{
+			r=*q;
+		   while(t->p<=p)
+		   {
+		   	r=t;
+		   	if(t->n==NULL)
+		   	break;
+		   	t=t->n;
+		    }
+		    if(t->p>p)	
+		    {
+		    n->n=t;
+			r->n=n;   	
+			}
+			else
+			{
+				t->n=n;
+				n->n=NULL;
+			}
+		  }
+		else
+		{
+			r=*q;
+			while(t->p==p)
+			{
+				r=t;
+				if(t->n==NULL)
+				break;
+				t=t->n;
+			}
+			if(t->p>p){
+		        n->n=t;
+				r->n=n;
+		    }
+			 else
+			 {
+		       t->n=n;
+			   n->n=NULL;   
+		      }    
+		}
+		
+	}
+	
+
+}
+void del(struct node **q)
+{
+	struct node *t=*q;
+	if(t==NULL)
+	{
+	  printf("\nUnderflow");
+	}
+	else if(t->n==NULL)
+	{
+	   *q=NULL;
+		free(t);	
+	}
+	else
+	{
+		*q=(*q)->n;
+		free(t);
+	}
+}
+void view(struct node *q)
+{
+	if(q==NULL)
+	printf("empty");
+	else
+	{
+		while(1)
+		{
+			printf("%d-%d\n",q->p,q->i);
+			if(q->n==NULL)
+			break;
+			q=q->n;
+		}
+	}
+}
+int main()
+{
+	struct node *q=NULL;int d,p;
+	while(1)
+	{
+		system("cls");
+		view(q);
+		switch(menu())
+		{
+			case 1:
+				printf("\nEnter Element to Insert");
+				scanf("%d",&d);
+				printf("\nEnter Prioty of Element");
+				scanf("%d",&p);
+				insert(&q,d,p);
+				break;
+			case 2:
+				del(&q);
+				break;
+			case 3:
+				printf("\nEnter any key to Exit");
+				getch();
+				exit(0);
+			default:
+				printf("\nInvalid choice");
+				
+		}
+		getch();
+	}
+	
+}
