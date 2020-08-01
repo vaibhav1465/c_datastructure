@@ -1,0 +1,184 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+struct node{
+  int item;
+  struct node *next;
+};
+void insertAsFirst(struct node **s,int data)
+{
+    struct node *n;
+    n=(struct node*)malloc(sizeof(struct node));
+    n->item=data;
+    n->next=*s;
+    *s=n;
+}
+void insertAsLast(struct node **s,int data)
+{
+    struct node *n,*t;
+    n=(struct node*)malloc(sizeof(struct node));
+    n->item=data;
+    n->next=NULL;
+    if(*s==NULL)
+        *s=n;
+    else{
+        t=*s;
+        while(t->next!=NULL)
+            t=t->next;
+        t->next=n;
+    }
+}
+void insertAfter(struct node *t,int data)
+{
+    struct node *n;
+    n=(struct node*)malloc(sizeof(struct node));
+    n->item=data;
+    n->next=t->next;
+    t->next=n;
+}
+void deleteFirst(struct node **s)
+{
+  struct node *t;
+  if(*s==NULL)
+        printf("Underflow");
+  else{
+    t=*s;
+    *s=t->next;
+    free(t);
+  }
+}
+void deleteLast(struct node **s)
+{
+    struct node *t1,*t2;
+    if(*s==NULL)
+        printf("Underflow");
+    else{
+        t1=*s;
+        t2=NULL;
+        while(t1->next!=NULL){
+            t2=t1;
+            t1=t1->next;
+        }
+        if(t2==NULL){
+            *s=NULL;
+            free(t1);
+        }
+        else{
+            t2->next=NULL;
+            free(t1);
+        }
+    }
+}
+void deleteNode(struct node **s,struct node *t)
+{
+    struct node *r;
+    if(*s==NULL)
+        printf("Underflow");
+    else{
+        if(*s == t)
+            deleteFirst(s);
+        else{
+            r=*s;
+            while(r->next!=t)
+                r=r->next;
+            r->next=t->next;
+            free(t);
+        }
+    }
+}
+void view(struct node *start)
+{
+    if(start==NULL)
+        printf("List is empty");
+    else{
+        while(start){
+            printf("%d ",start->item);
+            start=start->next;
+        }
+    }
+}
+struct node *search(struct node *start, int data)
+{
+    while(start){
+        if(start->item==data)
+            return(start);
+        start=start->next;
+    }
+    return NULL;
+}
+int menu()
+{
+    int choice;
+    printf("\n1. Insert as First");
+    printf("\n2. Insert as Last");
+    printf("\n3. Insert After a node");
+    printf("\n4. Delete first node");
+    printf("\n5. Delete last node");
+    printf("\n6. Delete particular");
+    printf("\n7. View List");
+    printf("\n8. Exit");
+    printf("\n\nEnter your choice");
+    scanf("%d",&choice);
+    return(choice);
+}
+int main()
+{
+    struct node *start=NULL, *temp;
+    int data,x;
+    while(1)
+    {
+        system("cls");
+        switch(menu())
+        {
+       case 1:
+            printf("Enter a number to add in the list");
+            scanf("%d",&data);
+            insertAsFirst(&start,data);
+            break;
+       case 2:
+            printf("Enter a number to add in the list");
+            scanf("%d",&data);
+            insertAsLast(&start,data);
+            break;
+       case 3:
+            printf("Enter data after which you want to add item");
+            scanf("%d",&x);
+            temp=search(start,x);
+            if(temp==NULL)
+                printf("Operation cannot perform");
+            else{
+                printf("Enter a number to add in the list");
+                scanf("%d",&data);
+                insertAfter(temp,data);
+            }
+            break;
+       case 4:
+            deleteFirst(&start);
+            break;
+       case 5:
+            deleteLast(&start);
+            break;
+       case 6:
+            printf("Enter data which you want to delete");
+            scanf("%d",&x);
+            temp=search(start,x);
+            if(temp==NULL)
+                printf("Data node found in the list");
+            else
+                deleteNode(&start,temp);
+            break;
+       case 7:
+           view(start);
+           break;
+       case 8:
+           printf("Thank You, press any key to exit");
+           getch();
+           exit(0);
+       default:
+        printf("Invalid choice, try again");
+
+        }
+        getch();
+    }
+
+}
