@@ -1,0 +1,109 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+struct node
+{
+	int i;
+	struct node *n;
+};
+void insert(struct node **s,int d)
+{
+	struct node *n,*t=*s;
+	n=(struct node*)malloc(sizeof(struct node));
+	n->i=d;
+	n->n=NULL;
+	if(*s==NULL)
+	*s=n;
+	else
+	{
+		while(t->n!=NULL)
+		t=t->n;
+		t->n=n;
+	}
+}
+void deletion(struct node **s)
+{
+	struct node *t=*s;
+	if(*s==NULL)
+	printf("\nUnderflow");
+	else
+	{
+		if(t->n==NULL)
+		{
+			free(t);
+			*s=NULL;
+		}
+		else
+		{
+			*s=(*s)->n;
+			free(t);
+		}
+	}
+	
+}
+void front(struct node *q)
+{
+	if(q==NULL)
+	printf("\nEmpty");
+	else
+	printf("\nFront : %d",q->i);
+}
+void rear(struct node *q)
+{
+	if(q==NULL)
+	printf("\nEmpty");
+	else
+	{
+		while(q->n!=NULL)
+		q=q->n;
+	    printf("\nRear : %d",q->i);
+   }
+}
+int menu()
+{
+	int c;
+	printf("\n1. Insert a Element");
+	printf("\n2. Delete a Element");
+	printf("\n3. Show the Front Element");
+	printf("\n4. Show the Rear Element");
+	printf("\n5. Exit");
+	printf("\n\n Choose ur option : ");
+	scanf("%d",&c);
+	return c;
+	
+}
+int main()
+{
+	struct node *q=NULL;
+	int d;
+while(1)
+	{
+		system("cls");
+		switch(menu())
+		{
+			case 1:
+				printf("\nEnter Element to Insert");
+				scanf("%d",&d);
+				insert(&q,d);
+				break;
+			case 2:
+				deletion(&q);
+				break;
+			case 3:
+			     front(q);
+				break;
+			case 4:
+			     rear(q);
+				break;
+			case 5:
+				printf("\nEnter any key to Exit");
+				getch();
+				exit(0);
+			default:
+				printf("\nInvalid choice");
+				
+		}
+		getch();
+	}
+	
+}
