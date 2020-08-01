@@ -1,0 +1,200 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+#include<string.h>
+struct d
+{
+	int rno;
+	char n[50];
+	int f;
+	struct d *t;
+};
+struct ht
+{
+	struct d *p[100];
+};
+struct ht* createArray()
+{
+struct ht *a;
+a=(struct ht*)malloc(sizeof(struct ht));
+for(int i=0;i<100;i++){
+a->p[i]=(struct d*)malloc(sizeof(struct d));
+a->p[i]->f=0;
+a->p[i]->t=NULL;
+}
+return a;
+}
+int hF(int key)
+{
+	return key%100;
+}
+void del(struct ht *a,int r)
+{
+	int i,c=0;
+	struct d *tr,*p;
+	i=hF(r);
+	tr=a->p[i];
+	if(tr->rno==r)
+	{
+		c=1;
+		if(tr->t!=NULL)
+		a->p[i]=tr->t;
+		else
+		tr->f=0;
+		
+	}
+	else
+	{
+		while(tr->t!=NULL)
+		{
+			p=tr;
+			tr=tr->t;
+			if(tr->rno==r)
+             	 {
+             	 	c=1;
+	            	if(tr->t!=NULL)
+					{
+		               tr=tr->t;
+		            }
+		            else
+		            {
+		               	p->t=NULL;
+		               	free(tr);
+					}
+		               
+	              }
+		}
+		if(c==0)
+		printf("Not Found");
+	}
+}
+void insert(struct ht *a)
+{
+	int k,i;
+	char n[50];
+	printf("Enter Roll no");
+	scanf("%d",&k);
+	printf("\nEnter Name");
+	fflush(stdin);
+	gets(n);
+	i=hF(k);
+    if(a->p[i]->f==0)
+	  {
+	  	a->p[i]->rno=k;
+	    strcpy(a->p[i]->n,n);
+	  	a->p[i]->f=1;
+	  }
+	  else
+	  {
+	  	struct d *tp=a->p[i];
+	    struct d *x;
+	    x=(struct d*)malloc(sizeof(struct d));
+	    x->f=1;
+	    strcpy(x->n,n);
+	    x->rno=k;
+	    x->t=NULL;
+	  	while(tp->t!=NULL)
+	  	tp=tp->t;
+	  	tp->t=x;
+	  	}
+}
+void search(struct ht *a,int r)
+{
+	int i=hF(r),f=0;
+	struct d *tr=a->p[i];
+		if(tr->rno==r)
+		{
+			printf("Roll no- %d\tName -%s\n",tr->rno,tr->n);
+			f=1;
+		}
+		else
+		{
+			while(tr->t!=NULL)
+			{
+				tr=tr->t;
+				if(tr->rno==r)
+				{
+				printf("Roll no- %d\tName -%s\n",tr->rno,tr->n);
+			     f=1;
+				 break;	
+				}
+			}
+			
+		}
+		if(f==0)
+		printf("Not Found");
+	
+}
+void view(struct ht *a)
+{
+	int i;
+	struct d *tr;
+	for(i=0;i<100;i++)
+	{
+		tr=a->p[i];
+		if(tr->f==1)
+		{
+			printf("Roll no- %d\tName -%s\n",tr->rno,tr->n);
+			if(tr->t!=NULL)
+			{
+				while(tr->t!=NULL)
+				{
+				printf("Roll no- %d\tName -%s\n",tr->t->rno,tr->t->n);
+				tr=tr->t;
+				}
+		    }   
+		}
+	}
+}
+int menu()
+{
+	int c;
+	printf("1. Insert");
+	printf("\n2. Delete");
+	printf("\n3. Search");
+	printf("\n4. View Hashtable");
+	printf("\n5. Exit");
+	printf("\n\n Choose ur option : ");
+	scanf("%d",&c);
+	return c;
+	
+}
+int main()
+{
+	struct ht *a;
+	int d;
+	a=createArray();
+	while(1)
+	{
+		system("cls");
+		switch(menu())
+		{
+			case 1:
+				insert(a);
+				break;
+			case 3:
+				printf("Enter rollno");
+				scanf("%d",&d);
+				search(a,d);
+				break;
+			case 2:
+				printf("Enter rollno");
+				scanf("%d",&d);
+				del(a,d);
+				break;
+			case 4:
+				view(a);
+				break;
+			case 5:
+				printf("\nEnter any key to Exit");
+				getch();
+				exit(0);
+			default:
+				printf("\nInvalid choice");
+				
+		}
+		getch();
+	}
+	
+
+}
