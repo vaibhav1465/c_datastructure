@@ -1,0 +1,229 @@
+#include<stdio.h>
+#include<conio.h>
+#include<stdlib.h>
+struct item
+{
+	int r;
+	char rn[50];
+};
+struct tree
+{
+	struct tree *l;
+	struct item i;
+	struct tree *r;
+};
+void view(struct tree *r)
+{
+	if(r)
+	{
+	 view(r->l);
+	 printf("%d-%s\n",r->i.r,r->i.rn);
+	 view(r->r);	
+	}
+}
+void delzero(struct tree *p,struct tree *s)
+{
+	if(p->l==s)
+	{
+		free(p->l);
+		p->l=NULL;
+	}
+	else
+	{
+	   free(p->r);
+		p->r=NULL;	
+	}
+}
+void delone(struct tree *p,struct tree *s)
+{
+	if(p->l==s)
+	{
+		if(s->l==NULL)
+		p->l=s->r;
+		if(s->r==NULL)
+		p->l=s->l;
+	}
+	else
+	{
+		if(s->l==NULL)
+		p->r=s->r;
+		if(s->r==NULL)
+		p->r=s->l;
+	}
+	free(s);
+}
+void del(struct tree **r,int rn)
+{
+	struct tree *tp=*r,*p=NULL;
+	if(tp==NULL)
+	{
+		printf("empty");
+		return;
+	}
+	else
+	{
+		while(tp)
+		{
+			if(tp->i.r==rn)
+			{
+				if(tp->r==NULL&tp->l==NULL)
+				{
+					if(p==NULL)
+					{
+						free(tp);
+						*r=NULL;
+					}
+				else{
+				delzero(p,tp);
+		        	}
+		        	return;
+		        }
+		       else if(tp->l==NULL||tp->r==NULL)
+		     {
+		     	if(p==NULL&&tp==*r)
+		     	{
+		     		if(tp->r==NULL)
+		     		*r=tp->l;
+		     		else
+		     		*r=tp->r;
+		     		free(tp);
+				}
+		     	else
+				{
+					delone(p,tp);
+				}
+				return;
+			 }
+			 else
+			 {
+			 	if(tp==*r)
+			 	{
+			 	(*r)->i=(*r)->l->i;
+			 	free((*r)->l);
+			 	(*r)->l=NULL;
+			 	return;
+				}
+				else
+				{
+			 	struct tree *tm=tp->l,*pr=NULL;
+			 	while(tm->r!=NULL){
+			 	pr=tm;
+			 	tm=tm->r;
+			    }
+			    tp->i=tm->i;
+			    if(pr==NULL)
+			    delzero(tp,tm);
+			 	else if(tm->l==NULL&&tm->r==NULL)
+			 	delzero(pr,tm);
+			 	else
+			 	delone(pr,tm);
+			 }
+			 return;
+		    }
+			 
+			}
+			else if(tp->i.r<rn){
+             p=tp;
+			tp=tp->r;}
+		    else{
+			p=tp;
+			tp=tp->l;
+		}
+		}
+		printf("not found");
+	}
+}
+void insert(struct tree **r,struct item t)
+{
+	struct tree *n,*tp=*r;
+	n=(struct tree*)malloc(sizeof(struct tree));
+	n->i=t;
+	n->l=NULL;
+	n->r=NULL;
+	if(tp==NULL)
+	*r=n;
+	else
+	{
+	while(1)
+	{
+		if(n->i.r==tp->i.r){
+		printf("\nduplicate not allowed");
+		free(n);
+		break;
+	}
+		if(n->i.r>tp->i.r){
+		if(tp->r==NULL){
+		tp->r=n;
+		break;
+	     }
+	     else
+	     tp=tp->r;
+	    }
+		else
+		 {
+		if(tp->l==NULL)
+		{
+			tp->l=n;
+			break;
+		}
+		else
+		tp=tp->l;
+	}
+		
+		
+	}
+}
+}
+
+struct item input()
+{
+	struct item t;
+	printf("\nEnter roll no");
+	scanf("%d",&t.r);
+	fflush(stdin);
+	printf("\nEnter name");
+	gets(t.rn);
+	return t;
+}
+int menu()
+{
+	printf("\n1. insert element");
+	printf("\n2. del element");
+	printf("\n3. exit");
+	printf("\nEnter your choice");
+	int c;
+	scanf("\t%d",&c);
+	return c;
+}
+int main()
+{
+	struct item t;
+	int r;
+	struct tree *root=NULL;
+	while(1)
+	{
+		system("cls");
+		view(root);
+		switch(menu())
+		{
+			case 1:
+				t=input();
+				insert(&root,t);
+				break;
+		    case 2:
+				printf("\nenter roll no");
+				scanf("%d",&r);
+			    del(&root,r);
+				break;
+			case 3:
+				printf("\nenter any key to exit");
+				getch();
+				exit(0);
+				break;
+			default:
+				printf("enter valid choice");
+				
+		}
+		getch();
+	}
+}
