@@ -1,0 +1,106 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+struct stack
+{
+	int c;
+	int t;
+	int *p;
+};
+void doublestack(struct stack *a)
+{
+	int *p;
+	a->c*=2;
+	p=(int*)malloc(sizeof(int)*(a->c));
+	free(a->p);
+	a->p=p;
+}
+void halfstack(struct stack *a)
+{
+	int *p;
+	a->c/=2;
+	p=(int*)malloc(sizeof(int)*(a->c));
+	free(a->p);
+	a->p=p;
+}
+void push(struct stack *a,int d)
+{
+	if(a->t+1==a->c)
+	doublestack(a);
+		a->t+=1;
+		a->p[a->t]=d;
+	
+}
+void pop(struct stack *a)
+{
+	if(a->t==-1)
+	printf("\nUnderflow");
+	else
+	{
+		printf("%d is Popped",a->p[a->t]);
+		a->t-=1;
+	}
+	if(a->t==a->c/2)
+	halfstack(a);
+}
+void peek(struct stack *a)
+{
+	if(a->t==-1)
+	printf("\nEmpty");
+	else
+	printf("\nPeek : %d",a->p[a->t]);
+}
+struct stack* createstack(int c)
+{
+	struct stack *a;
+	a=(struct stack*)malloc(sizeof(struct stack));
+	a->c=c;
+	a->t=-1;
+	a->p=(int*)malloc(sizeof(int)*c);
+}
+int menu()
+{
+	int c;
+	printf("\n1. Push a Element");
+	printf("\n2. Pop a Element");
+	printf("\n3. Show the Peek Element");
+	printf("\n4. Exit");
+	printf("\n\n Choose ur option : ");
+	scanf("%d",&c);
+	return c;
+	
+}
+int main()
+{
+	struct stack *a;
+	int d;
+	a=createstack(5);
+	while(1)
+	{
+		system("cls");
+		printf("Capcity : %d",a->c);
+		switch(menu())
+		{
+			case 1:
+				printf("\nEnter Element to Push");
+				scanf("%d",&d);
+				push(a,d);
+				break;
+			case 2:
+				pop(a);
+				break;
+			case 3:
+				peek(a);
+				break;
+			case 4:
+				printf("\nEnter any key to Exit");
+				getch();
+				exit(0);
+			default:
+				printf("\nInvalid choice");
+				
+		}
+		getch();
+	}
+	
+}
