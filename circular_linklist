@@ -1,0 +1,222 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+struct node
+{
+	int i;
+	struct node *n;
+};
+	
+void deleteLast(struct node **lt)
+{
+	struct node *t=*lt;
+	if(t==NULL)
+	printf("\nempty");
+	else
+	{
+	if(*lt==(*lt)->n)
+	{
+		*lt=NULL;
+		free(t);
+	}
+	else
+	{
+		while(t->n!=*lt)
+		t=t->n;
+		t->n=(*lt)->n;
+		free(*lt);
+		*lt=t;
+	}
+   }
+}
+void deleteFirst(struct node **lt)
+{
+	struct node *t=(*lt)->n;
+	if(*lt==NULL)
+	printf("\nempty");
+	else
+	{
+		if(t==*lt)
+		{
+			free(t);
+			*lt=NULL;
+		}
+		else
+		{
+			(*lt)->n=t->n;
+			free(t);
+		}
+	}
+}
+void delGiven(struct node **lt,struct node *t)
+{
+	if(t==(*lt)->n)
+	deleteFirst(lt);
+	else if(t==*lt)
+	deleteLast(lt);
+	else
+	{
+		struct node *p=*lt;
+		while(1)
+		{
+			if(p->n==t)
+			{
+				p->n=t->n;
+				free(t);
+				break;
+			}
+			p=p->n;
+	   }
+	}
+}
+struct node* search(struct node *lt, int data)
+{
+	struct node *p=lt->n;
+    while(1)
+	{
+        if(p->i==data)
+            return(p);
+            if(p==lt)
+            break;
+            p=p->n;
+    }
+    return NULL;
+}
+int menu()
+{
+	int choice;
+	printf("\n1.Insert A element at first");
+	printf("\n2.Insert A element at last");
+	printf("\n3.Insert A element at ur choice");
+	printf("\n4.Delete A element at first");
+	printf("\n5.Delete A element at last");
+	printf("\n6.Delete A element at ur choice");
+	printf("\n7.View Array");
+	printf("\n8.Exit");
+	printf("\nEnter your choice");
+	scanf("%d",&choice);
+	return choice;
+}
+void insFir(struct node **lt,int d)
+{
+	struct node *n;
+	n=(struct node*)malloc(sizeof(struct node));
+	n->i=d;
+	if(*lt==NULL)
+	{
+		*lt=n;
+		n->n=n;
+	}
+	else
+	{
+		n->n=(*lt)->n;
+		(*lt)->n=n;
+	}
+}
+void insLast(struct node **lt,int d)
+{
+	struct node *n;
+	n=(struct node*)malloc(sizeof(struct node));
+	n->i=d;
+	if((*lt)!=NULL)
+	{
+	n->n=(*lt)->n;
+	(*lt)->n=n;
+	*lt=n;
+    }
+      else{
+      	*lt=n;
+      (*lt)->n=n;
+      
+  }
+}
+void insGiven(struct node *t,struct node **lt,int d)
+{
+	struct node *n;
+	n=(struct node*)malloc(sizeof(struct node));
+	if(t==*lt)
+	*lt=n;
+	n->i=d;
+	n->n=t->n;
+	t->n=n;
+   
+}
+void view(struct node *lt)
+{
+	struct node *t=lt;
+	if(t==NULL)
+	printf("empty");
+	else
+	{
+		while(1){
+        printf("%d ",t->n->i);
+        t=t->n;
+		if(t==lt)
+		break;
+		}
+	}
+}
+int main()
+{
+	struct node *lt=NULL,*temp;
+	  int data,x;
+    while(1)
+    {
+        system("cls");
+        switch(menu())
+        {
+       case 1:
+            printf("Enter a number to add in the list");
+            scanf("%d",&data);
+            insFir(&lt,data);
+            break;
+       case 2:
+            printf("Enter a number to add in the list");
+            scanf("%d",&data);
+            insLast(&lt,data);
+            break;
+       case 3:
+            printf("Enter data after which you want to add item");
+            scanf("%d",&x);
+            temp=search(lt,x);
+            if(temp==NULL)
+                printf("Operation cannot perform");
+            else{
+                printf("Enter a number to add in the list");
+                scanf("%d",&data);
+                insGiven(temp,&lt,data);
+            }
+            break;
+      case 4:
+            deleteFirst(&lt);
+            break;
+       case 5:
+            deleteLast(&lt);
+            break;
+            
+       case 6:
+            printf("Enter data which you want to delete");
+            scanf("%d",&x);
+            temp=search(lt,x);
+            if(temp==NULL)
+                printf("Data node found in the list");
+            else
+                delGiven(&lt,temp);
+            break;
+       case 7:
+           view(lt);
+           break;
+       case 8:
+           printf("Thank You, press any key to exit");
+           getch();
+           exit(0);
+       default:
+        printf("Invalid choice, try again");
+
+        }
+        getch();
+    }
+
+	
+	
+}
