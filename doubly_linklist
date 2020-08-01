@@ -1,0 +1,237 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+struct node
+{
+	struct node *pr;
+	int i;
+	struct node *n;
+};
+int menu();
+struct node* search(struct node *s,int d);
+void insFir(struct node **s,int d);
+void insLast(struct node **s,int d);
+void insGiven(struct node *t,int d);
+void delFir(struct node **s);
+void delLast(struct node **s);
+void delGiven(struct node **s,struct node *t);
+void view(struct node *st);
+void insFir(struct node **s,int d)
+{
+	struct node *n;
+	n=(struct node*)malloc(sizeof(struct node));
+	n->i=d;
+	n->pr=NULL;
+	n->n=*s;
+    *s=n;
+}
+void insLast(struct node **s,int d)
+{
+struct node *n,*p=*s;
+	n=(struct node*)malloc(sizeof(struct node));
+	n->i=d;
+	n->n=NULL;
+     if(*s==NULL){
+     n->pr=NULL;
+     *s=n;
+ }
+     else
+     {
+     	while(p->n!=NULL)
+     	p=p->n;
+     	n->pr=p;
+     	p->n=n;
+	 }
+}
+void insGiven(struct node *t,int d)
+{
+	struct node *n;
+	n=(struct node*)malloc(sizeof(struct node));
+	n->i=d;
+	if(t->n!=NULL)
+	n->n=t->n;
+	else
+	n->n=NULL;
+	n->pr=t;
+	t->n->pr=n;
+	t->n=n;
+	
+}
+
+void view(struct node *st)
+{
+	struct node *p;
+	p=st;
+	if(p==NULL)
+	printf("\n empty");
+	else{
+	
+	while(1)
+	{
+		printf("\n%d ",p->i);
+		if(p->n==NULL)
+		break;
+	    else
+		p=p->n;
+	}
+}
+}
+void delFir(struct node **s)
+{
+	struct node *t=*s;
+	if(*s==NULL)
+	printf("underflow");
+	else{
+		t=*s;
+		*s=t->n;
+		if(*s!=NULL)
+		(*s)->pr=NULL;
+		free(t);
+	}
+	
+	
+}
+void delLast(struct node **s)
+{
+	struct node *p;
+	p=*s;
+	if(p==NULL)
+	printf("empty");
+	else
+	{
+		while(p->n!=NULL)
+		p=p->n;
+		if(p==*s){
+	    *s=NULL;	
+		free(p);
+	}
+		else
+		{
+			p->pr->n=NULL;
+			free(p);
+		}
+		
+	}
+	
+}
+void delGiven(struct node **s,struct node *t)
+{
+	if(t==*s)
+	delFir(s);
+	else if(t->n==NULL)
+	delLast(s);
+	else
+	{
+		t->pr->n=t->n;
+		t->n->pr=t->pr;
+		free(t);
+	}
+	
+	
+}
+struct node* search(struct node *s,int d)
+{
+	while(s)
+	{
+		if(s->i==d)
+		return s;
+		else
+		s=s->n;
+	}
+	return NULL;
+}
+int menu()
+{
+	int choice;
+	printf("\n1.Insert A element at first");
+	printf("\n2.Insert A element at last");
+	printf("\n3.Insert A element at ur choice");
+	printf("\n4.Delete A element at first");
+	printf("\n5.Delete A element at last");
+	printf("\n6.Delete A element at ur choice");
+	printf("\n7.View Array");
+	printf("\n8.Exit");
+	printf("\nEnter your choice");
+	scanf("%d",&choice);
+	return choice;
+}
+int main()
+{
+	struct node *st=NULL,*t;
+	int d;
+	while(1)
+	{ 
+	
+		system("cls");
+		switch(menu())
+		{
+			case 1:
+				
+	    		printf("\nEnter the data");
+	    		scanf("%d",&d);
+				insFir(&st,d);
+	    		break;
+			    
+			case 2:
+			   
+	    		printf("\nEnter the data");
+	    		scanf("%d",&d);
+				insLast(&st,d);
+	    		break;
+			    
+			case 3:	
+			
+				printf("\nEnter the number after which you want to add");
+	    		scanf("%d",&d);
+	    		t=search(st,d);
+				if(t!=NULL){
+				printf("\nEnter the number want to insert");
+				scanf("%d",&d);
+				insGiven(t,d);}
+				else
+				printf("invalid number");
+				break;
+			
+			case 4:	
+				
+				delFir(&st);
+	    		break;
+			    
+	    	case 5:	
+	    	
+	    	delLast(&st);
+				break;	
+			
+			case 6:	
+			    printf("\nEnter the number which you want to delete");
+	    		scanf("%d",&d);
+	    		t=search(st,d);
+				if(t!=NULL)
+				delGiven(&st,t);
+				else
+		       printf("\ninvalid number ");
+				break;
+			
+			case 7:	
+			
+			printf("\n");
+			view(st);
+			break;
+			
+			
+			case 8:	
+			
+				printf("\nEnter any key to exit");
+				getch();
+				exit(0);
+			
+			default :
+			printf("\nEnter valid choice");	
+										
+		}
+		getch();
+	
+
+}	
+	
+}
