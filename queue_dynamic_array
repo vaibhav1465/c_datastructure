@@ -1,0 +1,148 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+struct node
+{
+ int c;
+ int f;
+ int r;
+ int *p;	
+};
+void view(struct node *Q)
+{
+    int i;
+    if(Q->f!=-1){
+        for(i=Q->f;i!=Q->r;i==Q->c-1?(i=0):i++)
+            printf("%d ",Q->p[i]);
+        printf("%d ",Q->p[i]);
+
+    }
+    else
+        printf("Queue is empty");
+    printf("\nfront=%d rear=%d",Q->f,Q->r);
+}
+int menu()
+{
+	int c;
+	printf("\n1. Insert a Element");
+	printf("\n2. Delete a Element");
+	printf("\n3. Show the Front Element");
+	printf("\n4. Show the Rear Element");
+	printf("\n5. Exit");
+	printf("\n\n Choose ur option : ");
+	scanf("%d",&c);
+	return c;
+	
+}
+void halfqueue(struct node *q)
+{
+	int i,k=0;
+	q->c/=2;
+	int *p1=(int*)malloc(sizeof(int)*q->c);
+	for(i=q->f;i!=q->r;(i==q->c-1?(i=0):i++))
+	p1[k++]=q->p[i];
+	p1[k]=q->p[i];
+	q->f=0;
+	q->r=k;
+	free(q->p);
+	q->p=p1;
+}
+void doublequeue(struct node *q)
+{
+	int i,k=0;
+	q->c*=2;
+	int *p1=(int*)malloc(sizeof(int)*q->c);
+	for(i=q->f;i!=q->r;(i==q->c-1?(i=0):i++))
+	p1[k++]=q->p[i];
+	p1[k]=q->p[i];
+	q->f=0;
+	q->r=++k;
+	free(q->p);
+	q->p=p1;
+		
+}
+void insert(struct node *q,int d)
+{
+	if(q->r==-1)
+	q->r=q->f=0;
+	else if(q->r==q->c-1 &&q->f==0|| q->r+1==q->f)
+	doublequeue(q);
+	else if(q->r==q->c-1&&q->f>0)
+	q->r=0;
+	else
+	q->r++;
+	q->p[q->r]=d;
+   
+}
+void deletion(struct node *q)
+{
+	 if(q->f==-1)
+        printf("\nUnderflow");
+    else if(q->f==q->r)
+        q->f=q->r=-1;
+    else if(q->f==q->c-1)
+        q->f=0;
+    else
+        q->f+=1;
+    if((q->f>q->c/2&&q->r==q->c-1)||(q->f==0&&q->r+1==q->c/2))
+    halfqueue(q);
+    
+}
+void front(struct node *q)
+{
+	printf("\nFront Element : %d",q->p[q->f]);
+}
+void rear(struct node *q)
+{
+	printf("\nRear Element : %d",q->p[q->r]);
+}
+
+
+struct node* createqueue(int c)
+{
+	struct node *q;
+	q=(struct node*)malloc(sizeof(struct node));
+	q->c=c;
+	q->f=-1;
+	q->r=-1;
+	q->p=(int*)malloc(sizeof(int)*c);
+	return q;
+}
+int main()
+{
+  struct node *q;
+  int d;
+  q=createqueue(5);	
+  	while(1)
+	{
+		system("cls");
+		printf("Capcity : %d\n",q->c);
+		view(q);
+		switch(menu())
+		{
+			case 1:
+				printf("\nEnter Element to Insert");
+				scanf("%d",&d);
+				insert(q,d);
+				break;
+			case 2:
+				deletion(q);
+				break;
+			case 3:
+			     front(q);
+				break;
+			case 4:
+			     rear(q);
+				break;
+			case 5:
+				printf("\nEnter any key to Exit");
+				getch();
+				exit(0);
+			default:
+				printf("\nInvalid choice");
+				
+		}
+		getch();
+	}
+	
+} 
