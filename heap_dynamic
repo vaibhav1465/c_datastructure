@@ -1,0 +1,180 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+struct Array
+{
+    int capacity;
+    int lastIndex;
+    int *ptr;
+};
+struct Array* createArray(int);
+void insert(struct Array*,int, int);
+void del(struct Array*);
+void doubleArray(struct Array *);
+void halfArray(struct Array*);
+void halfArray(struct Array*arr)
+{
+    int *n,i;
+    if(arr->capacity>1)
+    {
+        n=(int*)malloc(sizeof(int)*(arr->capacity/2));
+        for(i=0;i<=arr->lastIndex;i++)
+            n[i]=arr->ptr[i];
+        free(arr->ptr);
+        arr->ptr=n;
+        arr->capacity/=2;
+    }
+}
+void doubleArray(struct Array *arr)
+{
+    int *n,i;
+    n=(int*)malloc(sizeof(int)*arr->capacity*2);
+    for(i=0;i<=arr->lastIndex;i++)
+        n[i]=arr->ptr[i];
+    free(arr->ptr);
+    arr->ptr=n;
+    arr->capacity*=2;
+}
+void view(struct Array*arr)
+{
+    int i;
+    if(arr->lastIndex==-1)
+        printf("Array is empty");
+    else
+        for(i=0;i<=arr->lastIndex;i++)
+            printf("%d ",arr->ptr[i]);
+}
+void insert(struct Array *a,int d)
+{
+	if(a->lastIndex==a->capacity-1)
+	doubleArray(a);
+	if(a->lastIndex==-1)
+	a->ptr[++a->lastIndex]=d;
+	else
+	{
+		int t=d,i,i1;
+		a->lastIndex++;
+		i=(a->lastIndex-1)/2;
+		i1=a->lastIndex;
+		while(1)
+		{
+			if(t>a->ptr[i]){
+			a->ptr[i1]=a->ptr[i];
+			if(i==0){
+			a->ptr[i]=d;
+			break;
+		     }
+		     }
+			else{
+			a->ptr[i1]=d;
+			break;
+		     }
+			i1=i;
+			i=(i-1)/2;
+		}
+	}
+}
+void del(struct Array *a)
+{
+	if(a->lastIndex==-1)
+	printf("empty");
+	else if(a->lastIndex==0)
+	a->lastIndex--;
+	else
+	{
+		a->ptr[0]=a->ptr[a->lastIndex];
+		a->lastIndex--;
+		int p=0,t;
+		while(1)
+		{
+		   if((a->ptr[p*2+1]>a->ptr[p*2+2])&&(a->lastIndex>=(p*2+2)))
+		   {
+		   	if(a->ptr[p]<a->ptr[p*2+1]){
+		   	t=a->ptr[p];
+		   	a->ptr[p]=a->ptr[p*2+1];
+		   	a->ptr[p*2+1]=t;
+		   	p=p*2+1;
+		   }
+		   }
+		   else if((a->ptr[p*2+2]>a->ptr[p*2+1])&&(a->lastIndex>=(p*2+2)))
+		   {
+		   	if(a->ptr[p]<a->ptr[p*2+2]){
+		   	t=a->ptr[p];
+		   	a->ptr[p]=a->ptr[p*2+2];
+		   	a->ptr[p*2+2]=t;
+		   	p=p*2+2;
+		   }
+	       }
+		   else 
+		   {
+		   	if(a->ptr[p]<a->ptr[p*2+1]){
+		   	t=a->ptr[p];
+		   	a->ptr[p]=a->ptr[p*2+1];
+		   	a->ptr[p*2+1]=t;
+		   	p=p*2+1;
+			}
+		   	
+		   }
+		   if((p*2+1)>a->lastIndex) 
+		   break;
+		}
+	}
+	
+}
+struct Array* createArray(int cap)
+{
+    struct Array *arr;
+    arr=(struct Array*)malloc(sizeof(struct Array));
+    arr->capacity=cap;
+    arr->lastIndex=-1;
+    arr->ptr=(int*)malloc(sizeof(int)*cap);
+    return arr;
+}
+int menu()
+{
+    int choice;
+
+    printf("\n1. Insert New Element");
+    printf("\n2. Delete Element");
+    printf("\n3. View array elements");
+    printf("\n4. Exit");
+    printf("\n\nEnter your choice");
+    scanf("%d",&choice);
+    return(choice);
+}
+main()
+{
+    struct Array *arr;
+    int data,index,c;
+    arr=createArray(5);
+    while(1){
+        system("cls");
+        printf("Capacity is %d\n",arr->capacity);
+        view(arr);
+        switch(menu())
+        {
+        case 1:
+            printf("\nEnter a number to insert");
+            scanf("%d",&data);
+            insert(arr,data);
+            break;
+        case 2:
+            del(arr);
+            break;
+       case 3:
+            printf("\n");
+            view(arr);
+            break;
+        case 4:
+            printf("Thank You. Press any key to exit");
+            getch();
+            exit(0);
+        default:
+            printf("\nInvalid choice, please retry");
+        }
+        getch();
+    }
+
+
+
+}
